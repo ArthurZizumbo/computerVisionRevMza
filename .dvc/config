@@ -1,0 +1,6 @@
+[core]
+    remote = storage
+    autostage = true
+['remote "storage"']
+    url = gs://geo-rect-artifacts
+    credentialpath = ../credentials/gcp-dvc-key.json

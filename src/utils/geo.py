@@ -100,7 +100,7 @@ def meters_per_pixel(latitude: float, zoom: int) -> float:
     float
         Meters per pixel
     """
-    return 156543.03392 * np.cos(np.radians(latitude)) / (2**zoom)
+    return float(156543.03392 * np.cos(np.radians(latitude)) / (2**zoom))
 
 
 def calculate_optimal_zoom(
@@ -179,4 +179,4 @@ def haversine_distance(
     a = np.sin(delta_phi / 2) ** 2 + np.cos(phi1) * np.cos(phi2) * np.sin(delta_lambda / 2) ** 2
     c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
 
-    return earth_radius * c
+    return float(earth_radius * c)

@@ -165,7 +165,7 @@ class AlignmentCascade:
             )
 
         logger.debug(
-            f"ECC failed: converged={result.converged}, " f"cc={result.correlation_coefficient:.4f}"
+            f"ECC failed: converged={result.converged}, cc={result.correlation_coefficient:.4f}"
         )
         return None
 

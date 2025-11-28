@@ -16,7 +16,7 @@
 
 ```powershell
 # Navegar al directorio del proyecto
-cd c:\Users\arthu\Proyectos\INE\manzanasDispares
+cd /manzanasDispares
 
 # Instalar dependencias con Poetry
 poetry install --with dev
@@ -60,7 +60,7 @@ docker-compose -f docker/docker-compose.yml up -d
 geo-rect/
 ├── src/                    # Código fuente
 │   ├── acquisition/        # Fase 1: Adquisición de datos
-│   │   ├── google_maps_client.py
+│   │   ├── maps_client.py
 │   │   ├── tile_stitcher.py
 │   │   └── vector_rasterizer.py
 │   ├── alignment/          # Fase 2: Alineación CV
@@ -87,7 +87,7 @@ geo-rect/
 
 | Categoría | Tecnología |
 |-----------|------------|
-| **Deep Learning** | PyTorch 2.5.1 + CUDA 12.4 |
+| **Deep Learning** | PyTorch 2.9.1 + CUDA 13.0 |
 | **Computer Vision** | OpenCV, Kornia (LoFTR) |
 | **Machine Learning** | XGBoost, LightGBM, DINOv2 |
 | **Geospatial** | GeoPandas, Shapely, Rasterio |
@@ -120,7 +120,7 @@ poetry run pre-commit run --all-files
 └─────────────┘    └──────────────────┘    └─────────────────────┘
       │                    │                         │
       ▼                    ▼                         ▼
-• Google Maps API    • ECC (rígido)           • DINOv2 embeddings
+• Maps               • ECC (rígido)           • DINOv2 embeddings
 • Vector→Raster      • LoFTR (deformable)     • 7 métricas geom.
 • Tile stitching     • SAM validation         • XGBoost ensemble
 ```
@@ -131,4 +131,3 @@ MIT License
 
 ---
 **Autor:** Arthur Zizumbo
-**Proyecto:** INE - Validación Cartográfica

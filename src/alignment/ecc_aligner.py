@@ -110,7 +110,7 @@ class ECCAligner:
         )
 
         try:
-            cc, warp_matrix = cv2.findTransformECC(
+            cc, warp_matrix_result = cv2.findTransformECC(
                 templateImage=template_gray,
                 inputImage=source_gray,
                 warpMatrix=warp_matrix,
@@ -119,7 +119,7 @@ class ECCAligner:
             )
             logger.debug(f"ECC converged with cc={cc:.4f}")
             return ECCResult(
-                warp_matrix=warp_matrix,
+                warp_matrix=np.asarray(warp_matrix_result, dtype=np.float32),
                 correlation_coefficient=cc,
                 converged=True,
                 iterations=self.num_iterations,

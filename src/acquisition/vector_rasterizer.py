@@ -93,9 +93,9 @@ class VectorRasterizer:
 
         pixel_coords = self._geo_to_pixel(geometry, bbox, target_size)
 
-        if geometry.geom_type == "Polygon":
+        if geometry.geom_type == "Polygon" and isinstance(pixel_coords, dict):
             self._draw_polygon(draw, pixel_coords, fill_with_alpha, outline_width)
-        elif geometry.geom_type == "MultiPolygon":
+        elif geometry.geom_type == "MultiPolygon" and isinstance(pixel_coords, list):
             for poly_coords in pixel_coords:
                 self._draw_polygon(draw, poly_coords, fill_with_alpha, outline_width)
 
@@ -107,7 +107,7 @@ class VectorRasterizer:
         geometry,
         bbox: tuple[float, float, float, float],
         size: tuple[int, int],
-    ) -> list:
+    ) -> dict[str, list] | list[dict[str, list]]:
         """Convert geometry coordinates to pixel coordinates."""
         min_lon, min_lat, max_lon, max_lat = bbox
         width, height = size
@@ -125,7 +125,7 @@ class VectorRasterizer:
             ]
             return {"exterior": exterior, "interiors": interiors}
         elif geometry.geom_type == "MultiPolygon":
-            result = []
+            result: list[dict[str, list]] = []
             for poly in geometry.geoms:
                 exterior = [transform_coords(lon, lat) for lon, lat in poly.exterior.coords]
                 interiors = [
@@ -135,12 +135,12 @@ class VectorRasterizer:
                 result.append({"exterior": exterior, "interiors": interiors})
             return result
 
-        return []
+        return {"exterior": [], "interiors": []}
 
     def _draw_polygon(
         self,
-        draw: ImageDraw.Draw,
-        coords: dict,
+        draw: ImageDraw.ImageDraw,
+        coords: dict[str, list],
         fill_color: tuple[int, int, int, int],
         outline_width: int,
     ) -> None:
@@ -156,7 +156,7 @@ class VectorRasterizer:
         geojson: dict,
         source_crs: str,
         target_crs: str,
-    ) -> dict:
+    ) -> dict[str, object]:
         """
         Reproject a GeoJSON geometry to a different CRS.
 
@@ -171,7 +171,7 @@ class VectorRasterizer:
 
         Returns
         -------
-        dict
+        dict[str, object]
             Reprojected GeoJSON
         """
         geometry = shape(geojson["geometry"]) if "geometry" in geojson else shape(geojson)
@@ -180,4 +180,5 @@ class VectorRasterizer:
 
         reprojected = transform(transformer.transform, geometry)
 
-        return mapping(reprojected)
+        result: dict[str, object] = mapping(reprojected)
+        return result
