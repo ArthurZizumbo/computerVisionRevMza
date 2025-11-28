@@ -154,8 +154,11 @@ class DiscrepancyClassifier(BaseEstimator, ClassifierMixin):
         np.ndarray
             Predicted labels
         """
+        if self._classes is None:
+            raise RuntimeError("Classifier must be fitted before prediction")
         proba = self.predict_proba(X)
-        return self._classes[np.argmax(proba, axis=1)]
+        indices = np.argmax(proba, axis=1)
+        return np.asarray(self._classes[indices])
 
     def predict_proba(self, X: np.ndarray) -> np.ndarray:
         """
@@ -174,10 +177,10 @@ class DiscrepancyClassifier(BaseEstimator, ClassifierMixin):
         if self._xgb_model is None or self._lgb_model is None:
             raise RuntimeError("Classifier must be fitted before prediction")
 
-        xgb_proba = self._xgb_model.predict_proba(X)
-        lgb_proba = self._lgb_model.predict_proba(X)
+        xgb_proba: np.ndarray = self._xgb_model.predict_proba(X)
+        lgb_proba: np.ndarray = self._lgb_model.predict_proba(X)
 
-        return (xgb_proba + lgb_proba) / 2
+        return np.asarray((xgb_proba + lgb_proba) / 2)
 
     def predict_single(
         self,
@@ -196,9 +199,11 @@ class DiscrepancyClassifier(BaseEstimator, ClassifierMixin):
         PredictionResult
             Detailed prediction result
         """
+        if self._classes is None:
+            raise RuntimeError("Classifier must be fitted before prediction")
         X = features.reshape(1, -1)
         proba = self.predict_proba(X)[0]
-        label_idx = np.argmax(proba)
+        label_idx = int(np.argmax(proba))
 
         return PredictionResult(
             label=DiscrepancyType(self._classes[label_idx]),

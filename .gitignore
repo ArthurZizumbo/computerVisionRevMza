@@ -26,6 +26,11 @@ build/
 .env.local
 *.env
 
+# Credentials (NEVER commit)
+credentials/
+*-key.json
+gcp-*.json
+
 # Data (managed by DVC)
 data/raw/*
 data/processed/*

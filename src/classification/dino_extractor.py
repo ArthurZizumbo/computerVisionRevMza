@@ -87,9 +87,9 @@ class DINOv2Extractor:
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
         outputs = self.model(**inputs)
-        embedding = outputs.last_hidden_state[:, 0, :].cpu().numpy()
+        embedding: np.ndarray = outputs.last_hidden_state[:, 0, :].cpu().numpy()
 
-        return embedding.squeeze()
+        return np.asarray(embedding.squeeze())
 
     @torch.inference_mode()
     def extract_batch(self, images: list[np.ndarray]) -> np.ndarray:
@@ -111,10 +111,10 @@ class DINOv2Extractor:
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
         outputs = self.model(**inputs)
-        embeddings = outputs.last_hidden_state[:, 0, :].cpu().numpy()
+        embeddings: np.ndarray = outputs.last_hidden_state[:, 0, :].cpu().numpy()
 
         logger.debug(f"Extracted embeddings for {len(images)} images")
-        return embeddings
+        return np.asarray(embeddings)
 
     def get_embedding_dim(self) -> int:
         """Get embedding dimension."""

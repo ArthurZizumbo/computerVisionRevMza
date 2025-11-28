@@ -52,10 +52,7 @@ def setup_logging(
         log_dir.mkdir(parents=True, exist_ok=True)
 
         file_format = (
-            "{time:YYYY-MM-DD HH:mm:ss} | "
-            "{level: <8} | "
-            "{name}:{function}:{line} | "
-            "{message}"
+            "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} | {message}"
         )
 
         logger.add(

@@ -90,9 +90,10 @@ class GoogleMapsClient:
 
         if cache_key in self._cache:
             logger.debug(f"Cache hit for tile at ({center_lat}, {center_lon})")
-            return self._cache[cache_key]
+            cached_data: bytes = self._cache[cache_key]
+            return cached_data
 
-        params = {
+        params: dict[str, str | int] = {
             "center": f"{center_lat},{center_lon}",
             "zoom": zoom,
             "size": f"{size[0]}x{size[1]}",
@@ -105,7 +106,7 @@ class GoogleMapsClient:
                 async with httpx.AsyncClient(timeout=30.0) as client:
                     response = await client.get(self.BASE_URL, params=params)
                     response.raise_for_status()
-                    image_data = response.content
+                    image_data: bytes = response.content
                     self._cache[cache_key] = image_data
                     logger.debug(f"Downloaded tile at ({center_lat}, {center_lon})")
                     return image_data
